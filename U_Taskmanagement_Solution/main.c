@@ -110,61 +110,51 @@ void vBlinkTask4(void *pvParameters) {
 
 void vButtonTask(void *pvParameters) {
 	initButtons();
-	vTaskDelay(3000);
-	vDisplayClear();
-	vDisplayWriteStringAtPos(0,0, "Button-DemoProgram");
-	vDisplayWriteStringAtPos(1,0, "LastPress: None");
-	vDisplayWriteStringAtPos(2,0, "Type: Not Pressed");
 	for(;;) {
-		updateButtons();
-		
+		updateButtons();		
 		if(getButtonPress(BUTTON1) == SHORT_PRESSED) {
-			vDisplayClear();
-			vDisplayWriteStringAtPos(0,0, "Button-DemoProgram");
-			vDisplayWriteStringAtPos(1,0, "LastPress: Button1");
-			vDisplayWriteStringAtPos(2,0, "Type: Short");
+			eTaskState state = eTaskGetState(blinkTask1Handle);
+			if(state == eSuspended) {
+				vTaskResume(blinkTask1Handle);
+			} else {
+				vTaskSuspend(blinkTask1Handle);
+			}
 		}
 		if(getButtonPress(BUTTON2) == SHORT_PRESSED) {
-			vDisplayClear();
-			vDisplayWriteStringAtPos(0,0, "Button-DemoProgram");
-			vDisplayWriteStringAtPos(1,0, "LastPress: Button2");
-			vDisplayWriteStringAtPos(2,0, "Type: Short");
+			eTaskState state = eTaskGetState(blinkTask2Handle);
+			if(state == eSuspended) {
+				vTaskResume(blinkTask2Handle);
+			} else {
+				vTaskSuspend(blinkTask2Handle);
+			}
 		}
 		if(getButtonPress(BUTTON3) == SHORT_PRESSED) {
-			vDisplayClear();
-			vDisplayWriteStringAtPos(0,0, "Button-DemoProgram");
-			vDisplayWriteStringAtPos(1,0, "LastPress: Button3");
-			vDisplayWriteStringAtPos(2,0, "Type: Short");
+			eTaskState state = eTaskGetState(blinkTask3Handle);
+			if(state == eSuspended) {
+				vTaskResume(blinkTask3Handle);
+			} else {
+				vTaskSuspend(blinkTask3Handle);
+			}
 		}
 		if(getButtonPress(BUTTON4) == SHORT_PRESSED) {
-			vDisplayClear();
-			vDisplayWriteStringAtPos(0,0, "Button-DemoProgram");
-			vDisplayWriteStringAtPos(1,0, "LastPress: Button4");
-			vDisplayWriteStringAtPos(2,0, "Type: Short");
+			eTaskState state = eTaskGetState(blinkTask4Handle);
+			if(state == eSuspended) {
+				vTaskResume(blinkTask4Handle);
+			} else {
+				vTaskSuspend(blinkTask4Handle);
+			}
 		}
 		if(getButtonPress(BUTTON1) == LONG_PRESSED) {
-			vDisplayClear();
-			vDisplayWriteStringAtPos(0,0, "Button-DemoProgram");
-			vDisplayWriteStringAtPos(1,0, "LastPress: Button1");
-			vDisplayWriteStringAtPos(2,0, "Type: Long");
+			
 		}
 		if(getButtonPress(BUTTON2) == LONG_PRESSED) {
-			vDisplayClear();
-			vDisplayWriteStringAtPos(0,0, "Button-DemoProgram");
-			vDisplayWriteStringAtPos(1,0, "LastPress: Button2");
-			vDisplayWriteStringAtPos(2,0, "Type: Long");
+			
 		}
 		if(getButtonPress(BUTTON3) == LONG_PRESSED) {
-			vDisplayClear();
-			vDisplayWriteStringAtPos(0,0, "Button-DemoProgram");
-			vDisplayWriteStringAtPos(1,0, "LastPress: Button3");
-			vDisplayWriteStringAtPos(2,0, "Type: Long");
+			
 		}
 		if(getButtonPress(BUTTON4) == LONG_PRESSED) {
-			vDisplayClear();
-			vDisplayWriteStringAtPos(0,0, "Button-DemoProgram");
-			vDisplayWriteStringAtPos(1,0, "LastPress: Button4");
-			vDisplayWriteStringAtPos(2,0, "Type: Long");
+			
 		}
 		vTaskDelay((1000/BUTTON_UPDATE_FREQUENCY_HZ)/portTICK_RATE_MS);
 	}
