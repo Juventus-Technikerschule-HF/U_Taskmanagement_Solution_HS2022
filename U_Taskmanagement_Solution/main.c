@@ -53,11 +53,10 @@ int main(void)
 	vInitClock();
 	vInitDisplay();
 	
-	xTaskCreate( vBlinkTask1, (const char *) "blnktsk1", configMINIMAL_STACK_SIZE, NULL, 1, blinkTask1Handle);
-	xTaskCreate( vBlinkTask2, (const char *) "blnktsk2", configMINIMAL_STACK_SIZE, NULL, 1, blinkTask2Handle);
-	xTaskCreate( vBlinkTask3, (const char *) "blnktsk3", configMINIMAL_STACK_SIZE, NULL, 1, blinkTask3Handle);
-	xTaskCreate( vBlinkTask4, (const char *) "blnktsk4", configMINIMAL_STACK_SIZE, NULL, 1, blinkTask4Handle);
-	xTaskCreate(vButtonTask, (const char *) "btTask", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+	xTaskCreate( vBlinkTask1, (const char *) "blnktsk1", configMINIMAL_STACK_SIZE, NULL, 1, &blinkTask1Handle);
+	xTaskCreate( vBlinkTask2, (const char *) "blnktsk2", configMINIMAL_STACK_SIZE, NULL, 1, &blinkTask2Handle);
+	xTaskCreate( vBlinkTask3, (const char *) "blnktsk3", configMINIMAL_STACK_SIZE, NULL, 1, &blinkTask3Handle);
+	xTaskCreate( vBlinkTask4, (const char *) "blnktsk4", configMINIMAL_STACK_SIZE, NULL, 1, &blinkTask4Handle);
 
 	vDisplayClear();
 	vDisplayWriteStringAtPos(0,0,"FreeRTOS 10.0.1");
