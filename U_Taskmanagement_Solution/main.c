@@ -31,9 +31,10 @@
 
 extern void vApplicationIdleHook( void );
 void vButtonTask(void *pvParameters);
-void vLedBlink(void *pvParameters);
-
-TaskHandle_t ledTask;
+void vBlinkTask1(void *pvParameters);
+void vBlinkTask2(void *pvParameters);
+void vBlinkTask3(void *pvParameters);
+void vBlinkTask4(void *pvParameters);
 
 void vApplicationIdleHook( void )
 {	
@@ -47,7 +48,10 @@ int main(void)
 	vInitClock();
 	vInitDisplay();
 	
-	xTaskCreate( vLedBlink, (const char *) "ledBlink", configMINIMAL_STACK_SIZE+10, NULL, 1, &ledTask);
+	xTaskCreate( vBlinkTask1, (const char *) "blnktsk1", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+	xTaskCreate( vBlinkTask2, (const char *) "blnktsk2", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+	xTaskCreate( vBlinkTask3, (const char *) "blnktsk3", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+	xTaskCreate( vBlinkTask4, (const char *) "blnktsk4", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 	xTaskCreate(vButtonTask, (const char *) "btTask", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
 
 	vDisplayClear();
@@ -59,20 +63,42 @@ int main(void)
 	return 0;
 }
 
-void vLedBlink(void *pvParameters) {
+void vBlinkTask1(void *pvParameters) {
 	(void) pvParameters;
-	PORTF.DIRSET = PIN0_bm; /*LED1*/
-	PORTF.OUT = 0x01;
+	PORTF.DIRSET = PIN0_bm | PIN1_bm;
+	PORTF.OUTCLR = PIN0_bm | PIN1_bm;
 	for(;;) {
-// 		uint32_t stack = get_mem_unused();
-// 		uint32_t heap = xPortGetFreeHeapSize();
-// 		uint32_t taskStack = uxTaskGetStackHighWaterMark(ledTask);
-// 		vDisplayClear();
-// 		vDisplayWriteStringAtPos(0,0,"Stack: %d", stack);
-// 		vDisplayWriteStringAtPos(1,0,"Heap: %d", heap);
-// 		vDisplayWriteStringAtPos(2,0,"TaskStack: %d", taskStack);
-// 		vDisplayWriteStringAtPos(3,0,"FreeSpace: %d", stack+heap);
-		PORTF.OUTTGL = 0x01;				
+		PORTF.OUTTGL = PIN0_bm | PIN1_bm;		
+		vTaskDelay(100 / portTICK_RATE_MS);
+	}
+}
+
+void vBlinkTask2(void *pvParameters) {
+	(void) pvParameters;
+	PORTF.DIRSET = PIN2_bm | PIN3_bm;
+	PORTF.OUTCLR = PIN2_bm | PIN3_bm;
+	for(;;) {
+		PORTF.OUTTGL = PIN2_bm | PIN3_bm;		
+		vTaskDelay(100 / portTICK_RATE_MS);
+	}
+}
+
+void vBlinkTask3(void *pvParameters) {
+	(void) pvParameters;
+	PORTE.DIRSET = PIN0_bm | PIN1_bm;
+	PORTE.OUTCLR = PIN0_bm | PIN1_bm;
+	for(;;) {
+		PORTE.OUTTGL = PIN0_bm | PIN1_bm;		
+		vTaskDelay(100 / portTICK_RATE_MS);
+	}
+}
+
+void vBlinkTask4(void *pvParameters) {
+	(void) pvParameters;
+	PORTE.DIRSET = PIN2_bm | PIN3_bm;
+	PORTE.OUTCLR = PIN2_bm | PIN3_bm;
+	for(;;) {
+		PORTE.OUTTGL = PIN2_bm | PIN3_bm;
 		vTaskDelay(100 / portTICK_RATE_MS);
 	}
 }
