@@ -35,11 +35,13 @@ void vBlinkTask1(void *pvParameters);
 void vBlinkTask2(void *pvParameters);
 void vBlinkTask3(void *pvParameters);
 void vBlinkTask4(void *pvParameters);
+void vLoadKiller(void *pvParameters);
 
 TaskHandle_t blinkTask1Handle;
 TaskHandle_t blinkTask2Handle;
 TaskHandle_t blinkTask3Handle;
 TaskHandle_t blinkTask4Handle;
+TaskHandle_t loadkillTaskHandle;
 
 void vApplicationIdleHook( void )
 {	
@@ -58,6 +60,7 @@ int main(void)
 	xTaskCreate( vBlinkTask3, (const char *) "blnktsk3", configMINIMAL_STACK_SIZE, NULL, 1, &blinkTask3Handle);
 	xTaskCreate( vBlinkTask4, (const char *) "blnktsk4", configMINIMAL_STACK_SIZE, NULL, 1, &blinkTask4Handle);
 	xTaskCreate(vButtonTask, (const char *) "btTask", configMINIMAL_STACK_SIZE, NULL, 3, NULL);
+	xTaskCreate( vLoadKiller, (const char*) "loadkill", configMINIMAL_STACK_SIZE, NULL, 2, &loadkillTaskHandle);
 
 	vDisplayClear();
 	vDisplayWriteStringAtPos(0,0,"FreeRTOS 10.0.1");
@@ -66,6 +69,14 @@ int main(void)
 	vDisplayWriteStringAtPos(3,0,"ResetReason: %d", reason);
 	vTaskStartScheduler();
 	return 0;
+}
+
+void vLoadKiller(void *pvParameters) {
+	uint32_t i = 0;
+	vTaskSuspend(loadkillTaskHandle); //initial state of loadkill Task shall be off
+	for(;;) {
+		i++; //do something, but dont wait/delay
+	}
 }
 
 void vBlinkTask1(void *pvParameters) {
@@ -145,7 +156,12 @@ void vButtonTask(void *pvParameters) {
 			}
 		}
 		if(getButtonPress(BUTTON1) == LONG_PRESSED) {
-			
+			eTaskState state = eTaskGetState(loadkillTaskHandle);
+			if(state == eSuspended) {
+				vTaskResume(loadkillTaskHandle);
+			} else {
+				vTaskSuspend(loadkillTaskHandle);
+			}
 		}
 		if(getButtonPress(BUTTON2) == LONG_PRESSED) {
 			
